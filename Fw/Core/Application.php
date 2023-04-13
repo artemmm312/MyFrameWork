@@ -3,6 +3,7 @@
 namespace Fw\Core;
 
 use Exception;
+
 final class Application
 {
 	private static ?Application $instance = null;
