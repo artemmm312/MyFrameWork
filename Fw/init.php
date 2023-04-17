@@ -1,5 +1,6 @@
 <?php
 
+use Fw\Core\Test;
 use Fw\Core\Config;
 use Fw\Core\InstanceContainer;
 use Fw\Core\Application;
@@ -17,5 +18,7 @@ spl_autoload_register(static function (string $class): void {
 
 session_start();
 
-InstanceContainer::setInstance(Application::class, new Application());
-//$app = InstanceContainer::getInstance(Application::class);
+const CORE = 'CORE';
+
+$app = InstanceContainer::getInstance(Application::class, new Application());
+

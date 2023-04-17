@@ -3,6 +3,7 @@
 namespace Fw\Core;
 
 use Exception;
+use Fw\Core\Config;
 
 final class Application
 {
@@ -18,40 +19,39 @@ final class Application
 		ob_start();
 	}
 	
-	public function endBuffer()
+	private function endBuffer()
 	{
 		$content = ob_get_contents();
-		$content = str_replace('#FW_MACRO_CSS#', '<link rel="stylesheet" type="text/css" href="style.css">', $content);
-		$content = str_replace('#FW_MACRO_TITLE#', 'Мой чудесный тайтл', $content);
-		$content = str_replace('#FW_MACRO_DESCRIPTION#', 'Мое описание', $content);
-		$content = str_replace('#FW_MACRO_KEYWORDS#', 'ключевые слова, мета-тег, SEO', $content);
+		$content = str_replace(['#FW_MACRO_CSS#', '#FW_MACRO_TITLE#', '#FW_MACRO_DESCRIPTION#', '#FW_MACRO_KEYWORDS#'],
+			['<link rel="stylesheet" type="text/css" href="style.css">', 'Мой чудесный тайтл', 'Мое описание', 'ключевые слова, мета-тег, SEO'],
+			$content);
 		ob_end_clean();
 		echo $content;
 	}
 	
 	public function restartBuffer()
 	{
-		ob_end_clean();
-		ob_start();
+		ob_clean();
 	}
 	
 	public function header()
 	{
-		echo '<head>';
-		echo '<title>#FW_MACRO_TITLE#</title>';
-		echo '<meta name="description" content="#FW_MACRO_DESCRIPTION#">';
-		echo '<meta name="keywords" content="#FW_MACRO_KEYWORDS#">';
-		echo '#FW_MACRO_CSS#';
-		echo '</head>';
+		$this->startBuffer();
+		$template = Config::get('templates/id');
+		if ($template === 'main') {
+			include __DIR__ . '/../templates/main/header.php';
+		}
 	}
 	
 	public function footer()
 	{
-		echo '</body>
-			<footer>
-				<div>Подвал</div>
-			</footer>';
+		$template = Config::get('templates/id');
+		if ($template === 'main') {
+			include __DIR__ . '/../templates/main/footer.php';
+		}
+		$this->endBuffer();
 	}
+	
 	
 	/*	private static ?Application $instance = null;
 		private $pager = null; // будет объект класса

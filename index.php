@@ -4,4 +4,5 @@
 
 require_once __DIR__ . "/Fw/init.php";
 
-//var_dump(APP);
+$app->header();
+$app->footer();

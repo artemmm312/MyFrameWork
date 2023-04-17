@@ -9,8 +9,8 @@ return $config =
 				'user' => 'root',
 				'password' => '',
 			],
-		'main' =>
+		'templates' =>
 			[
-			
+				'id' => 'main',
 			],
 	];

@@ -1,4 +1,8 @@
-</body>
-<footer>
-	<div>Подвал</div>
-</footer>
+<?php
+
+echo '
+	</body>
+	<footer>
+		<div>Подвал</div>
+	</footer>
+	';

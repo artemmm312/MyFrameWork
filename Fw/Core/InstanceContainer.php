@@ -10,25 +10,24 @@ class InstanceContainer
 	{
 	}
 	
-	public static function getInstance(string $class): ?object
+	public static function getInstance(string $class, object $object = null): ?object
 	{
 		if (empty(self::$instances[$class])) {
-			//echo "В контейнере нет объекта такого класса \n";
-			return null;
+			if ($object === null) {
+				return null;
+			}
+			if (empty(self::setInstance($class, $object))) {
+				return null;
+			}
 		}
 		return self::$instances[$class];
 	}
 	
-	public static function setInstance(string $class, object $object): ?object
+	private static function setInstance(string $class, object $object): ?object
 	{
-		if (!empty(self::$instances[$class])) {
-			return self::getInstance($class);
-		}
 		if ($class === $object::class) {
-			self::$instances[$class] = $object;
-			return self::$instances[$class];
+			return self::$instances[$class] = $object;
 		}
-		//echo "Объект должен соответствовать классу \n";
 		return null;
 	}
 }
