@@ -8,5 +8,9 @@ return $config =
 				'database' => 'test',
 				'user' => 'root',
 				'password' => '',
-			]
+			],
+		'main' =>
+			[
+			
+			],
 	];
