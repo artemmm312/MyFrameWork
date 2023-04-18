@@ -1,11 +1,16 @@
-<?php
-echo '
+<?php /*if(defined('CORE')) {
+	die;
+} */?>
+
 	<head>
-		<title>#FW_MACRO_TITLE#</title>
-		<meta name="description" content="#FW_MACRO_DESCRIPTION#">
-		<meta name="keywords" content="#FW_MACRO_KEYWORDS#">
-		#FW_MACRO_CSS#
+		<title><?php $this->getPage()->showProperty('title'); ?></title>
+		<!--<meta name="description" content="#FW_MACRO_DESCRIPTION#">
+		<meta name="keywords" content="#FW_MACRO_KEYWORDS#">-->
+		<?php $this->getPage()->showHead(); ?>
+
 	</head>
-	<h1>Шапочка</h1>
+	<header>
+		<h1><?php $this->getPage()->showProperty('h1'); ?></h1>
+	</header>
 	<body>
-		';
+

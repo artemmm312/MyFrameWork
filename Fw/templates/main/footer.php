@@ -1,8 +1,8 @@
-<?php
+<?php /*if(defined('CORE')) {
+	die;
+} */?>
 
-echo '
 	</body>
 	<footer>
-		<div>Подвал</div>
+		<div><?php $this->getPage()->showProperty('footer-div'); ?></div>
 	</footer>
-	';

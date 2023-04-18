@@ -11,6 +11,6 @@ return $config =
 			],
 		'templates' =>
 			[
-				'id' => 'main',
+				'main' => './Fw/templates/main/',
 			],
 	];

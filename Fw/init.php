@@ -18,7 +18,6 @@ spl_autoload_register(static function (string $class): void {
 
 session_start();
 
-const CORE = 'CORE';
+define('CORE', 'CORE');
 
-$app = InstanceContainer::getInstance(Application::class, new Application());
-
+//$app = InstanceContainer::getInstance(Application::class);
