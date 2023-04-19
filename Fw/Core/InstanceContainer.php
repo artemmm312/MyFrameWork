@@ -31,7 +31,7 @@ class InstanceContainer
 			return self::$instances[$class] = new $class();
 		}
 		if (count($parameters) !== count($args)) {
-			throw new \RuntimeException("Количество параметров не совпадает");
+			throw new \Exception("Количество параметров не совпадает");
 		}
 		return self::$instances[$class] = new $class(...$args);
 	}

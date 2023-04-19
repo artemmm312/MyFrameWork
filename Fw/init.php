@@ -1,5 +1,7 @@
 <?php
 
+use Fw\Core\Test;
+use Fw\Core\Config;
 use Fw\Core\InstanceContainer;
 use Fw\Core\Application;
 
@@ -18,4 +20,4 @@ session_start();
 
 define('CORE', 'CORE');
 
-$app = InstanceContainer::getInstance(Application::class);
+//$app = InstanceContainer::getInstance(Application::class);
