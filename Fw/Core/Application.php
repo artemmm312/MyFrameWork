@@ -2,29 +2,58 @@
 
 namespace Fw\Core;
 
-use Exception;
-
 final class Application
 {
-	private static ?Application $instance = null;
-	private $pager = null; // будет объект класса
+	private static ?Page $pager = null;
 	private $template = null; //будет объект класса
 	
-	private function __construct()
+	public function __construct()
 	{
 	}
-	public function getInstance(): Application
+	
+	public function getPage(): Page
 	{
-		if (empty(self::$instance)) {
-			self::$instance = new self();
+		if (empty(self::$pager)) {
+			self::$pager = new Page();
 		}
-		return self::$instance;
+		return self::$pager;
 	}
-	private function __clone()
+	
+	private function startBuffer(): void
 	{
+		ob_start();
 	}
-	public function __wakeup(): void
+	
+	private function endBuffer(): void
 	{
-		throw new Exception("Cannot unserialize a singleton.");
+		$content = ob_get_contents();
+		$content = $this->getPage()->getAllReplace($content);
+		ob_end_clean();
+		echo $content;
+	}
+	
+	public function restartBuffer(): void
+	{
+		ob_clean();
+	}
+	
+	public function header(): void
+	{
+		$this->startBuffer();
+		$template = Config::get('templates/main') . 'header.php';
+		if (!file_exists($template)) {
+			throw new \RuntimeException("Файл '{$template}' не существует");
+		}
+		include $template;
+	}
+	
+	public function footer(): void
+	{
+		$template = Config::get('templates/main') . 'footer.php';
+		if (!file_exists($template)) {
+			throw new \RuntimeException("Файл '{$template}' не существует");
+		}
+		include $template;
+		$this->endBuffer();
 	}
 }
