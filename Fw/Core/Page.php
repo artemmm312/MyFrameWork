@@ -129,4 +129,3 @@ class Page
 		return preg_replace('/#FW_PAGE_PROPERTY_.*#/', '', $content);
 	}
 }
-

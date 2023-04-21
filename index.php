@@ -20,6 +20,12 @@ $app->getPage()->setProperty('footer-div', 'Подвальчик');
 ?>
 
 <pre>
+-------- 20.04.2023 --------
+	1) cоздал класс Dictionary
+	2) создал классы Request, Server и Session, наследуемые от Dictionary, и заполняемые одноименными глобальными массивами
+	3) Модифицировал класс Application: при инициализации создаются 3 выше описанных класса в контейнере InstanceContainer.
+	И добавил методы получения экземпляров этих классов из контейнера.
+	
 -------- 19.04.2023 --------
 	1) доработал классы Application и Page
 	2) создал страницу истории изменения проекта
@@ -45,3 +51,12 @@ $app->getPage()->setProperty('footer-div', 'Подвальчик');
 </pre>
 
 <?php $app->footer(); ?>
+
+<?php
+$request = $app->getRequest();
+$server = $app->getServer();
+$session = $app->getSession();
+var_dump($request);
+var_dump($server);
+var_dump($session);
+?>

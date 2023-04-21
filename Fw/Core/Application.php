@@ -2,6 +2,10 @@
 
 namespace Fw\Core;
 
+use Fw\Core\Type\Request;
+use Fw\Core\Type\Server;
+use Fw\Core\Type\Session;
+
 final class Application
 {
 	private static ?Page $pager = null;
@@ -9,6 +13,9 @@ final class Application
 	
 	public function __construct()
 	{
+		InstanceContainer::getInstance(Request::class);
+		InstanceContainer::getInstance(Server::class);
+		InstanceContainer::getInstance(Session::class);
 	}
 	
 	public function getPage(): Page
@@ -55,5 +62,25 @@ final class Application
 		}
 		include $template;
 		$this->endBuffer();
+	}
+	
+	public function getRequest(): Request
+	{
+		return InstanceContainer::getInstance(Request::class);
+	}
+	
+	public function getServer(): Server
+	{
+		return InstanceContainer::getInstance(Server::class);
+	}
+	
+	public function getSession(): Session
+	{
+		return InstanceContainer::getInstance(Session::class);
+	}
+	
+	public function includeComponent(string $component, string $template, array $params)
+	{
+	
 	}
 }
