@@ -5,13 +5,20 @@ namespace Fw\Core;
 class InstanceContainer
 {
 	private static array $instances = [];
+	private static InstanceContainer $instance;
 	
 	private function __construct()
 	{
 	}
 	
-	public static function getInstance(string $class, array $args = null): ?object
+	public static function getInstance(string $class = null, array $args = null): ?object
 	{
+		if(empty($class)) {
+			if (empty(self::$instance)){
+				self::$instance = new self();
+			}
+			return self::$instance;
+		}
 		if (empty(self::$instances[$class])) {
 			self::setInstance($class, $args);
 		}

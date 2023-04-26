@@ -8,22 +8,25 @@ use Fw\Core\Type\Session;
 
 final class Application
 {
-	private static ?Page $pager = null;
+	private ?Page $pager = null;
 	private $template = null; //будет объект класса
 	
-	public function __construct()
+	public function __construct($context)
 	{
 		InstanceContainer::getInstance(Request::class);
 		InstanceContainer::getInstance(Server::class);
 		InstanceContainer::getInstance(Session::class);
+		if(!($context instanceof InstanceContainer)) {
+			throw new \RuntimeException('Контекст не соответствует InstanceContainer.');
+		}
 	}
 	
 	public function getPage(): Page
 	{
-		if (empty(self::$pager)) {
-			self::$pager = new Page();
+		if (empty($this->pager)) {
+			$this->pager = new Page();
 		}
-		return self::$pager;
+		return $this->pager;
 	}
 	
 	private function startBuffer(): void
@@ -81,6 +84,19 @@ final class Application
 	
 	public function includeComponent(string $component, string $template, array $params)
 	{
-	
+		[$namespace, $id] = explode(":", $component);
+		$file = __DIR__ . '/../Components/' . $namespace . '/' . $id . '/.class.php';
+		$component_file = realpath($file);
+		include_once $component_file;
+		$component_class = '';
+		foreach (get_declared_classes() as $class) {
+			$ref = new \ReflectionClass($class);
+			if ($ref->getFileName() === $component_file) {
+				$component_class = $class;
+				break;
+			}
+		}
+		$component_object = new $component_class($id, $params, $template);
+		$component_object->executeComponent();
 	}
 }

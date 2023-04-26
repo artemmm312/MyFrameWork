@@ -18,4 +18,4 @@ session_start();
 
 define('CORE', 'CORE');
 
-$app = InstanceContainer::getInstance(Application::class);
+$app = InstanceContainer::getInstance(Application::class, [InstanceContainer::getInstance()]);

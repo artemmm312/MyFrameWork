@@ -41,23 +41,26 @@ class Page
 	
 	public function addJs(string $src): void  //добавляет src в массив сохраняя уникальность
 	{
-		if (!in_array($src, $this->js, true)) {
+		/*if (!in_array($src, $this->js, true)) {
 			$this->js[] = $src;
-		}
+		}*/
+		$this->js[md5($src)] = $src;
 	}
 	
 	public function addCss(string $link): void  //добавляет link сохраняя уникальность
 	{
-		if (!in_array($link, $this->css, true)) {
+		/*if (!in_array($link, $this->css, true)) {
 			$this->css[] = $link;
-		}
+		}*/
+		$this->css[md5($link)] = $link;
 	}
 	
 	public function addString(string $str): void  // добавляет в массив для хранения
 	{
-		if (!in_array($str, $this->string, true)) {
+		/*if (!in_array($str, $this->string, true)) {
 			$this->string[] = $str;
-		}
+		}*/
+		$this->string[] = $str;
 	}
 	
 	public function showTitle(): void
@@ -101,15 +104,17 @@ class Page
 	{
 		$js = '';
 		if (!empty($this->js)) {
-			foreach ($this->js as $src) {
+			/*foreach ($this->js as $src) {
 				$js .= '<script async src="' . $src . '"></script>' . PHP_EOL;
-			}
+			}*/
+			$js = implode(PHP_EOL, $this->js) . PHP_EOL;
 		}
 		$css = '';
 		if (!empty($this->css)) {
-			foreach ($this->css as $link) {
+			/*foreach ($this->css as $link) {
 				$css .= '<link href="' . $link . '" type="text/css" rel="stylesheet">' . PHP_EOL;
-			}
+			}*/
+			$css = implode(PHP_EOL, $this->css)  . PHP_EOL;
 		}
 		$string = '';
 		if (!empty($this->string)) {
