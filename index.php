@@ -11,9 +11,7 @@ $app->header();
 $app->getPage()->setTitle('Какой-то заголовок');
 $app->getPage()->setDescription('Какое-то описание');
 $app->getPage()->setKeywords('ключевые слова, мета-тег, SEO');
-//$app->getPage()->addJs('script.js');
 $app->getPage()->addJs('<script async src="script.js"></script>');
-//$app->getPage()->addCSS('style.css');
 $app->getPage()->addCSS('<link href="style.css" type="text/css" rel="stylesheet">');
 $app->getPage()->addString('<script type="text/javascript">alert("Здравствуйте уважаемый!")</script>');
 $app->getPage()->setProperty('h1', 'Шапочка');
@@ -22,6 +20,14 @@ $app->includeComponent('View:Main', 'theme_1', []);
 ?>
 
 <pre>
+-------- 27.04.2023 --------
+	1) Оптимизировал Application::includeComponent(), добавил свойство $components в котором хранятся имена классов
+		подключаемых компонентов
+	2) Добавил трейт с методом проверки существования файла, подключения и возврата его абсолютного пути
+	3) Исправил Template::render()
+	4) Добавил маску макроса "property" в массив макросов Page, внёс соответствующие изменения в методы Page
+	5) Оптимизировал механизм подстановки пустой строки на неопределенные property в Page
+	
 -------- 23.04.2023 --------
 	1) Изменил класс Page:
 		1.1) изменил добавление js, css и string сразу тегом и хэшом в массив
@@ -69,12 +75,10 @@ $app->includeComponent('View:Main', 'theme_1', []);
 <?php $app->footer(); ?>
 
 <?php
-/*$request = $app->getRequest();
-$server = $app->getServer();
-$session = $app->getSession();
-var_dump($request);
-var_dump($server);
-var_dump($session);*/
-$app->includeComponent('View:Main', 'theme_1', []);
-
+//$request = $app->getRequest();
+//$server = $app->getServer();
+//$session = $app->getSession();
+//var_dump($request);
+//var_dump($server);
+//var_dump($session);
 ?>

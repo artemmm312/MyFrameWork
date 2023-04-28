@@ -13,8 +13,8 @@ class InstanceContainer
 	
 	public static function getInstance(string $class = null, array $args = null): ?object
 	{
-		if(empty($class)) {
-			if (empty(self::$instance)){
+		if (empty($class)) {
+			if (empty(self::$instance)) {
 				self::$instance = new self();
 			}
 			return self::$instance;
