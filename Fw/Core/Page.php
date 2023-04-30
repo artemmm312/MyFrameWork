@@ -22,6 +22,7 @@ class Page
 					'css' => "#FW_MACRO_CSS#",
 					'string' => "#FW_MACRO_STRING#",
 				],
+			'property' => '#FW_PAGE_PROPERTY_'
 		];
 	
 	public function setTitle(string $title): void
@@ -41,23 +42,17 @@ class Page
 	
 	public function addJs(string $src): void  //добавляет src в массив сохраняя уникальность
 	{
-		if (!in_array($src, $this->js, true)) {
-			$this->js[] = $src;
-		}
+		$this->js[md5($src)] = $src;
 	}
 	
 	public function addCss(string $link): void  //добавляет link сохраняя уникальность
 	{
-		if (!in_array($link, $this->css, true)) {
-			$this->css[] = $link;
-		}
+		$this->css[md5($link)] = $link;
 	}
 	
 	public function addString(string $str): void  // добавляет в массив для хранения
 	{
-		if (!in_array($str, $this->string, true)) {
-			$this->string[] = $str;
-		}
+		$this->string[] = $str;
 	}
 	
 	public function showTitle(): void
@@ -94,39 +89,37 @@ class Page
 	
 	public function showProperty(string $id): void  // выводит макрос для будущей замены
 	{
-		echo "#FW_PAGE_PROPERTY_$id#";
+		if (empty($this->properties[$id])) {
+			$this->setProperty($id, '');
+		}
+		echo $this->macros['property'] . $id . '#';
 	}
 	
 	public function getAllReplace(string $content): string
 	{
 		$js = '';
 		if (!empty($this->js)) {
-			foreach ($this->js as $src) {
-				$js .= '<script async src="' . $src . '"></script>' . PHP_EOL;
-			}
+			$js = implode(PHP_EOL, $this->js) . PHP_EOL;
 		}
 		$css = '';
 		if (!empty($this->css)) {
-			foreach ($this->css as $link) {
-				$css .= '<link href="' . $link . '" type="text/css" rel="stylesheet">' . PHP_EOL;
-			}
+			$css = implode(PHP_EOL, $this->css) . PHP_EOL;
 		}
 		$string = '';
 		if (!empty($this->string)) {
 			$string = implode(PHP_EOL, $this->string);
 		}
-		$search_head = [];
+		$searchHead = [];
 		foreach ($this->macros['head'] as $macro) {
-			$search_head[] = $macro;
+			$searchHead[] = $macro;
 		}
-		$replace_head = [$this->title, $this->description, $this->keywords, $js, $css, $string];
-		$content = str_replace($search_head, $replace_head, $content);
+		$replaceHead = [$this->title, $this->description, $this->keywords, $js, $css, $string];
+		$content = str_replace($searchHead, $replaceHead, $content);
 		
 		foreach ($this->properties as $id => $value) {
-			$content = str_replace("#FW_PAGE_PROPERTY_$id#", $value, $content);
+			$property = $this->macros['property'] . $id . '#';
+			$content = str_replace($property, $value, $content);
 		}
-		
-		return preg_replace('/#FW_PAGE_PROPERTY_.*#/', '', $content);
+		return $content;
 	}
 }
-

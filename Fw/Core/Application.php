@@ -2,21 +2,35 @@
 
 namespace Fw\Core;
 
+use Fw\Core\Type\Request;
+use Fw\Core\Type\Server;
+use Fw\Core\Type\Session;
+use Fw\Traits\FileExists;
+
 final class Application
 {
-	private static ?Page $pager = null;
-	private $template = null; //будет объект класса
+	use FileExists;
 	
-	public function __construct()
+	private ?Page $pager = null;
+	private $template = null; //будет объект класса
+	private array $components = [];
+	
+	public function __construct($context)
 	{
+		InstanceContainer::getInstance(Request::class);
+		InstanceContainer::getInstance(Server::class);
+		InstanceContainer::getInstance(Session::class);
+		if (!($context instanceof InstanceContainer)) {
+			throw new \RuntimeException('Контекст не соответствует InstanceContainer.');
+		}
 	}
 	
 	public function getPage(): Page
 	{
-		if (empty(self::$pager)) {
-			self::$pager = new Page();
+		if (empty($this->pager)) {
+			$this->pager = new Page();
 		}
-		return self::$pager;
+		return $this->pager;
 	}
 	
 	private function startBuffer(): void
@@ -40,20 +54,59 @@ final class Application
 	public function header(): void
 	{
 		$this->startBuffer();
-		$template = Config::get('templates/main') . 'header.php';
-		if (!file_exists($template)) {
-			throw new \RuntimeException("Файл '{$template}' не существует");
-		}
-		include $template;
+		$template = Config::get('templates/default') . 'header.php';
+		$this->fileExists($template);
 	}
 	
 	public function footer(): void
 	{
-		$template = Config::get('templates/main') . 'footer.php';
-		if (!file_exists($template)) {
-			throw new \RuntimeException("Файл '{$template}' не существует");
-		}
-		include $template;
+		$template = Config::get('templates/default') . 'footer.php';
+		include_once $template;
+		//$this->fileExists($template);
 		$this->endBuffer();
+	}
+	
+	public function getRequest(): Request
+	{
+		return InstanceContainer::getInstance(Request::class);
+	}
+	
+	public function getServer(): Server
+	{
+		return InstanceContainer::getInstance(Server::class);
+	}
+	
+	public function getSession(): Session
+	{
+		return InstanceContainer::getInstance(Session::class);
+	}
+	
+	public function includeComponent(string $component, string $template, array $params): void
+	{
+		[$namespace, $id] = explode(":", $component);
+		if (in_array($component, $this->components, true)) {
+			$componentObject = new $this->components[$component]($id, $params, $template);
+			$componentObject->executeComponent();
+			return;
+		}
+		$declaredClassesOne = get_declared_classes();
+		//$file = $this->getServer()['DOCUMENT_ROOT'] . '/Fw/Components/' . $namespace . '/' . $id . '/.class.php';
+		$file = __DIR__ . '/../Components/' . $namespace . '/' . $id . '/.class.php';
+		$componentFile = $this->fileExists($file);
+		$declaredClassesTwo = get_declared_classes();
+		$classes = array_diff($declaredClassesTwo, $declaredClassesOne);
+		foreach ($classes as $class) {
+			$ref = new \ReflectionClass($class);
+			if ($ref->getFileName() === $componentFile) {
+				$componentClass = $class;
+				break;
+			}
+		}
+		if (empty($componentClass)) {
+			throw new \RuntimeException('Класс компонента не найден.');
+		}
+		$this->components[$component] = $componentClass;
+		$componentObject = new $componentClass($id, $params, $template);
+		$componentObject->executeComponent();
 	}
 }

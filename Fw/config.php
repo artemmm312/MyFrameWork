@@ -11,6 +11,6 @@ return $config =
 			],
 		'templates' =>
 			[
-				'main' => './Fw/templates/main/',
+				'default' => './Fw/templates/default/',
 			],
 	];
