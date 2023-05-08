@@ -8,6 +8,7 @@ class MainComponent extends Base
 {
 	public function executeComponent(): void
 	{
-		$this->template->render();
+		$this->result = $this->params;
+		$this->template->render($this->result);
 	}
 }

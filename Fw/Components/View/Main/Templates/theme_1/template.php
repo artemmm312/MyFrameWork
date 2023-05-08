@@ -1,1 +1,2 @@
-<div class="hello">Hello!</div>
+
+<div class="hello"><?php $this->renderProperty('hello'); ?></div>

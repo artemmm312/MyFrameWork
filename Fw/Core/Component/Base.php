@@ -10,7 +10,7 @@ abstract class Base
 	public Template $template;
 	public string $__path;
 	
-	public function __construct(string $id, array $params, string $template)
+	public function __construct(string $id, string $template, array $params)
 	
 	{
 		$this->__path = dirname((new \ReflectionClass($this))->getFileName());

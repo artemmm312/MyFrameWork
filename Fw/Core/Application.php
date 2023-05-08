@@ -61,8 +61,8 @@ final class Application
 	public function footer(): void
 	{
 		$template = Config::get('templates/default') . 'footer.php';
-		include_once $template;
-		//$this->fileExists($template);
+		//include_once $template;
+		$this->fileExists($template);
 		$this->endBuffer();
 	}
 	
@@ -84,8 +84,8 @@ final class Application
 	public function includeComponent(string $component, string $template, array $params): void
 	{
 		[$namespace, $id] = explode(":", $component);
-		if (in_array($component, $this->components, true)) {
-			$componentObject = new $this->components[$component]($id, $params, $template);
+		if (array_key_exists($component, $this->components)) {
+			$componentObject = new $this->components[$component]($id, $template, $params);
 			$componentObject->executeComponent();
 			return;
 		}
@@ -106,7 +106,7 @@ final class Application
 			throw new \RuntimeException('Класс компонента не найден.');
 		}
 		$this->components[$component] = $componentClass;
-		$componentObject = new $componentClass($id, $params, $template);
+		$componentObject = new $componentClass($id, $template, $params);
 		$componentObject->executeComponent();
 	}
 }
