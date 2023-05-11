@@ -5,6 +5,7 @@ namespace Fw\Core;
 use Fw\Core\Type\Request;
 use Fw\Core\Type\Server;
 use Fw\Core\Type\Session;
+use Fw\Core\Validation\Validator;
 use Fw\Traits\FileExists;
 
 final class Application
@@ -108,5 +109,10 @@ final class Application
 		$this->components[$component] = $componentClass;
 		$componentObject = new $componentClass($id, $template, $params);
 		$componentObject->executeComponent();
+	}
+	
+	public function isValid(Validator $validator, mixed $value): bool
+	{
+		return $validator->validate($value);
 	}
 }
